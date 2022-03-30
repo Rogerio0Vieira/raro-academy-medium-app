@@ -1,25 +1,29 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Link, Route, Routes, useParams } from 'react-router-dom';
+import { Button } from './components/Button';
+import { Login } from './components/Login';
+
+const Contador = () => {
+  return <div>Contador</div>;
+}
+
+const Aluno = () => {
+  const {aluno} = useParams(); 
+  console.log('==========', aluno)
+  return(
+    <Link to="login">{`fazer login com ${aluno}`}</Link>
+  )
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+   <BrowserRouter> 
+    <Routes>
+      <Route path="/login" element={<Login />}/>
+      <Route path="/contador" element={<Contador />}/>
+      <Route path="/alunos/:aluno" element={<Aluno />}/>
+    </Routes>
+   </BrowserRouter>
   );
 }
 
