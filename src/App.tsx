@@ -1,29 +1,31 @@
 import React from 'react';
 import { BrowserRouter, Link, Route, Routes, useParams } from 'react-router-dom';
-import { Button } from './components/Button';
-import { Login } from './components/Login';
+import { Layout } from './components/Layout';
+import { ArtigoPage } from './pages/Artigo';
+import { ArtigosPage } from './pages/Artigos';
+import { EditarArquivoPage } from './pages/EditarArquivo';
+import { LoginPage } from './pages/Login';
+import { MeusArtigosPage } from './pages/MeusArtigos';
+import { NotFoundPage } from './pages/NotFound';
 
-const Contador = () => {
-  return <div>Contador</div>;
-}
-
-const Aluno = () => {
-  const {aluno} = useParams(); 
-  console.log('==========', aluno)
-  return(
-    <Link to="login">{`fazer login com ${aluno}`}</Link>
-  )
-}
 
 function App() {
   return (
-   <BrowserRouter> 
+    <BrowserRouter>
     <Routes>
-      <Route path="/login" element={<Login />}/>
-      <Route path="/contador" element={<Contador />}/>
-      <Route path="/alunos/:aluno" element={<Aluno />}/>
+      <Route path="/login" element={<LoginPage />} />
+
+      <Route path="/" element={<Layout />}>
+        <Route index element={<ArtigosPage />} />
+        <Route path="/artigo/:id" element={<ArtigoPage />} />
+        <Route path="/artigos" element={<MeusArtigosPage />} />
+        <Route path="/artigos/editar/:id" element={<EditarArquivoPage />} />
+        <Route path="/artigos/novo" element={<EditarArquivoPage />} />
+      </Route>
+
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
-   </BrowserRouter>
+  </BrowserRouter>
   );
 }
 

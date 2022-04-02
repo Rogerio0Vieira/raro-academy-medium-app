@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { formataData } from "../../helpers/date";
 import { ArticleThumbnailProps } from "./ArticleThumbnail.types";
 
@@ -10,9 +11,11 @@ export const ArticleThumbnail: React.FC<ArticleThumbnailProps> = ({
   tempoLeitura = '7 min',
   autor,
   editavel,
+  id
 }) => {
   return (
-    <div className="w-10/12 flex flex-col mt-5">    
+    
+    <div className="flex flex-col w-2/3 mt-5">  
       <header className="flex flex-row gap-3 items-center">
         <img
           src={ autor.avatar }
@@ -25,14 +28,24 @@ export const ArticleThumbnail: React.FC<ArticleThumbnailProps> = ({
       <div className="grid grid-cols-4 gap-3">
         <div className="col-span-3 flex flex-col">
           <div className="font-bold text-lg pt-3">
-            { titulo }
+            <Link to={`/artigo/${id}`}>
+              { titulo }
+            </Link>
           </div>
           <div className="font-light pt-2 text-base text-gray-600">
-            { resumo }
+            <Link to={`/artigo/${id}`}>
+              { resumo }
+            </Link>
           </div>
         </div>
-        <div className="flex items-center" style={{ maxHeight: '100px' }}>
-          <img className="mt-10" src={ imagem } />
+        <div className="flex items-center h-[100px]">
+         <Link to={`/artigo/${id}`}>
+          <img
+            className="mt-10"
+            src={imagem}
+            alt={`imagem-do-artigo-${titulo}`}
+          />
+         </Link>
         </div>
       </div>
       <footer className="flex flex-row pt-7 gap-3 items-center">
@@ -41,6 +54,7 @@ export const ArticleThumbnail: React.FC<ArticleThumbnailProps> = ({
         </div>
         {
           editavel && (
+            <Link to={`editar/${id}`}>
             <button
               className={
                 `
@@ -52,6 +66,7 @@ export const ArticleThumbnail: React.FC<ArticleThumbnailProps> = ({
             >
               Editar
             </button>
+            </Link>
           )
         }
       </footer>
