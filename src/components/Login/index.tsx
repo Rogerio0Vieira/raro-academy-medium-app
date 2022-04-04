@@ -1,7 +1,45 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../Button";
 import { Input } from "../Input";
+import apiClient from '../../services/api-client';
 
 export const Login = () => {
+  const [login, setLogin] = useState("");
+  const [senha, setSenha] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [erro, setErro] = useState("");
+
+  const navigate = useNavigate();
+
+  async function autenticaUsuario(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setErro("");
+    setLoading(true);
+
+    try {
+      const url = '/auth/login';
+      const response = await apiClient.post(
+        url,
+        { login, senha }
+      );
+
+      const { access_token, id } = response.data;
+      if (access_token) {
+        localStorage.setItem("access_token", access_token);
+        localStorage.setItem("id", id);
+        navigate("/artigos");
+      }
+    } catch (error: any) {
+      if (error.response.data.statusCode === 401) {
+        setErro("Usuário ou senha Inválidos");
+      } else {
+        setErro("Erro ao autenticar usuário. Tente novamente mais tarde.");
+      }
+    }
+    setLoading(false);
+  }
+
   return (
     <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -12,7 +50,7 @@ export const Login = () => {
             alt="Workflow"
           />
         </div>
-        <form className="mt-8 space-y-6" action="#">
+        <form className="mt-8 space-y-6" onSubmit={autenticaUsuario}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div className="mt-5">
               <Input
@@ -21,6 +59,8 @@ export const Login = () => {
                 label="Login"
                 placeholder="login"
                 required
+                value={login}
+                onChange={(e) => setLogin(e.target.value)}
               />
             </div>
 
@@ -31,14 +71,25 @@ export const Login = () => {
                 label="senha"
                 placeholder="********"
                 required
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
               />
             </div>
           </div>
+          {erro ? (
+            <span className="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1">
+              {erro}
+            </span>
+          ) : (
+            <></>
+          )}
           <div>
-            <Button type="submit">Login</Button>
+            <Button disabled={loading} type="submit">
+              {loading ? "Carregando..." : "Entrar"}
+            </Button>
           </div>
         </form>
       </div>
     </div>
-  )
+  );
 };
